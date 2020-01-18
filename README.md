@@ -25,4 +25,4 @@ test8 GGGAGAGAGAGAGAGAGAGAGAGAG
 test9 TAGAGAGAGAGAGAGAGAGAGAG
 test10  ACCCCTAGAGAGAGAGAGAGAGAG
 ```
-(note that each line is in format: `name TAB sequence`)
+(note that each line is in format: `name,sequence`)
