@@ -6,7 +6,7 @@ Program will connect to https://eu.idtdna.com/calc/analyzer and click hairpie bu
 # Installation
 Python3 + Selenium (Chrome) application are prerequisited.
 1. Download https://sites.google.com/a/chromium.org/chromedriver/downloads
-2. `pip3 install git+https://github.com/raradek/oligo_analyzer_hairpin.git --user` OR download this dir and launch `pip3 install . --user`
+2. `pip3 install git+https://github.com/raradek/oligo_analyzer_hairpin.git --user` OR download this [dir](https://github.com/raradek/oligo_analyzer_hairpin/archive/master.zip) and launch `pip3 install -r requirements.txt`
 3. Put chromedriver.exe in the same path as OligoAnalyzer.py
 4. Optionally put your user name and pw to `user.ini`
 5. Execute the `OligoAnalyzer.py`
