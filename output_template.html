@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Report</title>
+    <style>
+    img{width: 15%}
+    .error{color:red}
+    </style>
+  </head>
+  <body>
+    {% for s in results %}
+    <h2>{{ s.name + ": " + s.value }}</h2>
+      {% if s.error %}
+        <p class="error">{{s.error}}</p>
+      {% else %}
+        {% for i in s.result %}
+          <a href="{{ i }}"><img src="{{ i }}" /></a>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </body>
+</html>
