@@ -71,7 +71,7 @@ print("Processing...")
 # 4. Sequence(*line.split("\t")) rozprskne dva elementy do dvou parametru konstrukturu tridy Sequence a ziska instanci Sequence
 # 5. promenna sequences obsahuje list instanci tridy Sequence
 
-sequences = [Sequence(*line.split("\t")) for line in lines] # "*" unpacking
+sequences = [Sequence(*line.split(",")) for line in lines] # "*" unpacking
 sequences = sequences[1:] # zahodime prvni radek = hlavicku
 
 
