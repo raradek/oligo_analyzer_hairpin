@@ -1,6 +1,7 @@
 from time import sleep
 
 import webbrowser
+import datetime as dt
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
@@ -15,10 +16,11 @@ user = ""
 pw = ""
 param_set = "qPCR"
 target_type = "RNA"
-oligo_conc = 0.25
+oligo_conc = 0.2
 na_conc = 50
-mg_conc = 0
-dntps_conc = 0
+mg_conc = 3
+dntps_conc = 0.8
+temp = 40
 
 ini = Path("user.ini")
 if ini.exists():
@@ -132,20 +134,37 @@ for sequence in sequences:
     hairpin_button.click()
     val = []
 
-    # extract images
+    # Wait for General Information:
     error_text = "No structure was found for this sequence, please check again."
     try:
-        WebDriverWait(driver, 3).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#OAResults h1"), "General Information"))
+        WebDriverWait(driver, 3).until(
+            EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#OAResults h1"), "General Information"))
     except TimeoutException:
-            sequence.error = error_text
+        sequence.error = error_text
     else:
-        image_div_els = driver.find_elements_by_css_selector('[data-bind = "foreach: structures"]')[0]
-        image_els = image_div_els.find_elements_by_tag_name("img")
-        image_srcs = [e.get_attribute("src") for e in image_els]
-        val = image_srcs
+        # fill in temperature
+        elem = driver.find_element_by_xpath('//input[@data-bind="value: temp"]')
+        elem.clear()
+        elem.send_keys(temp)
+        # click Update button
+        update_button = driver.find_elements_by_css_selector(".UnafoldInputs button")[0]
+        update_button.click()
 
-    sequence.result = val
-    results.append(sequence)
+
+        # extract images
+        error_text = "No structure was found for this sequence, please check again."
+        try:
+            WebDriverWait(driver, 3).until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#OAResults h1"), "General Information"))
+        except TimeoutException:
+                sequence.error = error_text
+        else:
+            image_div_els = driver.find_elements_by_css_selector('[data-bind = "foreach: structures"]')[0]
+            image_els = image_div_els.find_elements_by_tag_name("img")
+            image_srcs = [e.get_attribute("src") for e in image_els]
+            val = image_srcs
+
+        sequence.result = val
+        results.append(sequence)
 
 print("Generating report...")
 print("(note that images included in the report are temporarily saved on the server")
@@ -153,7 +172,8 @@ print(" - you might want to save a copy of the report before they are deleted")
 
 tmpl = Template(Path('output_template.html').read_text())
 html = tmpl.render(results=results)
-output = Path('output.html')
+now = dt.datetime.now()
+output = Path(f'output_{now.strftime("%Y%m%d_%H%M%S")}.html')
 output.write_text(html)
 webbrowser.open(output)
 
